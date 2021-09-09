@@ -24,7 +24,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -51,5 +51,14 @@ jobs:
       # publish without the implied build, optimize for release, and specifically place the output in the /publish directory
       - name: Publish
         run: dotnet publish --no-build -c Release -o ./publish 
+      
+      # deploy the app to azure webservices
+      - name: Deploy to Azure WebApp
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: ${{env.AZURE_WEBAPP_NAME}} #name of the app 
+          publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} #authentication for accessing azure webapps 
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} #where to find the artifact to deploy
+          
         
         
