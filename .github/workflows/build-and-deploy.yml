@@ -1,0 +1,55 @@
+# This is a basic workflow to help you get started with Actions
+
+# this sets environment variables for use throughout the template
+env: 
+  AZURE_WEBAPP_NAME: aspnet-contoso-sample #name of the webapp in azure
+  AZURE_WEBAPP_PACKAGE_PATH: './publish' #where to find the binaries of the application
+  NETCORE_VERSION: '3.1.103' #specify a specific version of .NET CORE to build your application
+
+name: Build and Deploy
+
+# what events will trigger the run of the workflow
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+  # Allows you to run this workflow manually from the Actions tab. If this is not present it can only be run via triggers
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # this is a default behavior in ADO
+      - uses: actions/checkout@v2
+
+      # Makes sure that the specific version of the .NET SDK is installed 
+      # instead of using the default provided on the GitHub Runner
+      - name: Setup .NET Core SDK ${{env.NETCORE_VERSION}}
+        uses: actions/setup-dotnet@v1 #how an action is specified
+        with: #how to give params to an action
+          dotnet-version: ${{env.NETCORE_VERSION}}
+          
+      # explicity define each step in the build process for a .net app
+      - name: Restore
+        run: dotnet restore
+      
+      # build optimized version of the .dll without the implied restore
+      - name: Build
+        run: dotnet build --no-restore -c Release
+     
+      # create the package to deploy
+      # publish without the implied build, optimize for release, and specifically place the output in the /publish directory
+      - name: Publish
+        run: dotnet publish --no-build -c Release -o ./publish 
+        
+        
