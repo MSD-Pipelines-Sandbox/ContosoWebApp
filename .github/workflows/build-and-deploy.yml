@@ -2,7 +2,7 @@
 
 # this sets environment variables for use throughout the template
 env: 
-  AZURE_WEBAPP_NAME: aspnet-contoso-sample #name of the webapp in azure
+  AZURE_WEBAPP_NAME: aspnet-contoso-webapp #name of the webapp in azure
   AZURE_WEBAPP_PACKAGE_PATH: './publish' #where to find the binaries of the application
   NETCORE_VERSION: '3.1.103' #specify a specific version of .NET CORE to build your application
 
@@ -49,8 +49,16 @@ jobs:
      
       # create the package to deploy
       # publish without the implied build, optimize for release, and specifically place the output in the /publish directory
+      # this does not store the artifact, it is cleaned up by the runner unless explicitly uploaded to the job
       - name: Publish
         run: dotnet publish --no-build -c Release -o ./publish 
+      
+      # save the build artifact to the github actions run 
+      - name: Publish Artifact
+        uses: actions/upload-artifact@v1.0.0
+        with: 
+          name: artifact
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
       
       # deploy the app to azure webservices
       - name: Deploy to Azure WebApp
