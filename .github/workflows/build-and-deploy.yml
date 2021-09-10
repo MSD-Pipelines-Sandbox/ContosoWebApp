@@ -5,6 +5,8 @@ env:
   AZURE_WEBAPP_NAME: aben-contoso-webapp #name of the webapp in azure
   AZURE_WEBAPP_PACKAGE_PATH: './publish' #where to find the binaries of the application
   NETCORE_VERSION: '3.1.103' #specify a specific version of .NET CORE to build your application
+  GITHUB_PR_USERNAME: ${{github.actor}}
+  GITHUB_TOKEN: ${{secrets.TOKEN}}
 
 name: Build and Deploy
 
