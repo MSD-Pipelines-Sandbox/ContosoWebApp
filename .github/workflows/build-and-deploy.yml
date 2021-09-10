@@ -62,7 +62,7 @@ jobs:
           
       # use semantic versioning to create a release
       - name: Release Notes Preview
-        uses: synk/release-notes-preview@v1.6.1
+        uses: snyk/release-notes-preview@v1.6.1
         with: 
           releaseBranch: main
           
