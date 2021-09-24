@@ -62,12 +62,6 @@ jobs:
           name: artifact
           path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
           
-      # use semantic versioning to create a release
-      - name: Release Notes Preview
-        uses: snyk/release-notes-preview@v1.6.1
-        with: 
-          releaseBranch: main
-          
       # deploy the app to azure webservices
       - name: Deploy to Azure WebApp
         uses: azure/webapps-deploy@v2
@@ -75,6 +69,3 @@ jobs:
           app-name: ${{env.AZURE_WEBAPP_NAME}} #name of the app 
           publish-profile: ${{secrets.AZURE_WEBAPP_PUBLISH_PROFILE }} #authentication for accessing azure webapps 
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} #where to find the artifact to deploy
-          
-        
-        
